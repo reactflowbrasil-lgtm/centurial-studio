@@ -81,7 +81,7 @@ export function InstallPWA() {
                                 </h3>
                                 <p className="text-xs text-muted-foreground mt-0.5 leading-tight">
                                     {showManualInfo
-                                        ? 'Toque no ícone de compartilhar (quadrado com seta) e escolha "Adicionar à Tela de Início".'
+                                        ? 'Toque nos três pontos (⋮) no canto do navegador e escolha "Instalar aplicativo" ou "Adicionar à tela inicial".'
                                         : 'Adicione o Centurial à sua tela inicial para acesso rápido.'}
                                 </p>
                             </div>
