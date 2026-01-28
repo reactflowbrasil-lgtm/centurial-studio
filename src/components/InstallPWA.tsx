@@ -7,43 +7,43 @@ import { useToast } from '@/hooks/use-toast';
 export function InstallPWA() {
     const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
     const [isVisible, setIsVisible] = useState(false);
+    const [showManualInfo, setShowManualInfo] = useState(false);
     const { toast } = useToast();
 
     useEffect(() => {
         const handler = (e: any) => {
             console.log('✅ PWA: beforeinstallprompt disparado!');
-            // Prevent Chrome 67 and earlier from automatically showing the prompt
             e.preventDefault();
-            // Stash the event so it can be triggered later.
             setDeferredPrompt(e);
-            // Update UI notify the user they can install the PWA
             setIsVisible(true);
         };
 
         window.addEventListener('beforeinstallprompt', handler);
 
+        // Se o prompt automático não disparar em 10s (ex: iOS), mostra guia manual
+        const timer = setTimeout(() => {
+            if (!deferredPrompt && !window.matchMedia('(display-mode: standalone)').matches) {
+                setIsVisible(true);
+                setShowManualInfo(true);
+            }
+        }, 8000);
+
         return () => {
             window.removeEventListener('beforeinstallprompt', handler);
+            clearTimeout(timer);
         };
-    }, []);
+    }, [deferredPrompt]);
 
     const handleInstallClick = async () => {
         if (!deferredPrompt) return;
-
-        // Show the install prompt
         deferredPrompt.prompt();
-
-        // Wait for the user to respond to the prompt
         const { outcome } = await deferredPrompt.userChoice;
-
         if (outcome === 'accepted') {
             toast({
                 title: "Instalação Iniciada",
                 description: "Obrigado por instalar o Centurial SGPG!",
             });
         }
-
-        // We've used the prompt, and can't use it again, throw it away
         setDeferredPrompt(null);
         setIsVisible(false);
     };
@@ -66,7 +66,6 @@ export function InstallPWA() {
                             <button
                                 onClick={dismiss}
                                 className="text-muted-foreground hover:text-foreground transition-colors"
-                                aria-label="Close install prompt"
                             >
                                 <X className="h-4 w-4" />
                             </button>
@@ -77,31 +76,41 @@ export function InstallPWA() {
                                 <Download className="h-6 w-6 text-primary-foreground" />
                             </div>
                             <div className="flex-1 min-w-0 pr-4">
-                                <h3 className="font-display font-bold text-sm sm:text-base text-foreground">Instalar App</h3>
-                                <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
-                                    Acesse o sistema direto da sua tela inicial.
+                                <h3 className="font-display font-bold text-sm sm:text-base text-foreground">
+                                    {showManualInfo ? 'Instalar App' : 'Instalar Centurial'}
+                                </h3>
+                                <p className="text-xs text-muted-foreground mt-0.5">
+                                    {showManualInfo
+                                        ? 'No iPhone: toque em Compartilhar e "Adicionar à Tela de Início".'
+                                        : 'Acesse o sistema direto da sua tela inicial.'}
                                 </p>
                             </div>
                         </div>
 
                         <div className="mt-4 flex gap-2">
-                            <Button
-                                onClick={handleInstallClick}
-                                className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground text-xs h-9"
-                            >
-                                Instalar Agora
-                            </Button>
+                            {!showManualInfo ? (
+                                <Button
+                                    onClick={handleInstallClick}
+                                    className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground text-xs h-9"
+                                >
+                                    Instalar Agora
+                                </Button>
+                            ) : (
+                                <Button
+                                    onClick={dismiss}
+                                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground text-xs h-9"
+                                >
+                                    Entendi
+                                </Button>
+                            )}
                             <Button
                                 variant="outline"
                                 onClick={dismiss}
-                                className="text-xs h-9"
+                                className="text-xs h-9 px-2"
                             >
-                                Agora não
+                                Depois
                             </Button>
                         </div>
-
-                        {/* Ambient glow */}
-                        <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-accent/5 rounded-full blur-2xl group-hover:bg-accent/10 transition-all" />
                     </div>
                 </motion.div>
             )}
