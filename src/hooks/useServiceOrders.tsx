@@ -123,7 +123,7 @@ export function useServiceOrders() {
     mutationFn: async ({ id, checklist }: { id: string; checklist: string[] }) => {
       const { error } = await supabase
         .from('service_orders')
-        .update({ production_checklist: checklist } as any)
+        .update({ production_checklist: checklist })
         .eq('id', id);
 
       if (error) throw error;
