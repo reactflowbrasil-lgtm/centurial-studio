@@ -34,7 +34,7 @@ export function useServiceOrders() {
         .from('service_orders')
         .update({ status })
         .eq('id', id);
-      
+
       if (error) throw error;
     },
     onSuccess: () => {
@@ -60,7 +60,7 @@ export function useServiceOrders() {
         .insert([order])
         .select()
         .single();
-      
+
       if (error) throw error;
       return data;
     },
@@ -86,7 +86,7 @@ export function useServiceOrders() {
         .from('service_orders')
         .delete()
         .eq('id', id);
-      
+
       if (error) throw error;
     },
     onSuccess: () => {
@@ -119,12 +119,34 @@ export function useServiceOrders() {
     }, {} as Record<string, number>),
   };
 
+  const updateChecklist = useMutation({
+    mutationFn: async ({ id, checklist }: { id: string; checklist: string[] }) => {
+      const { error } = await supabase
+        .from('service_orders')
+        .update({ production_checklist: checklist } as any)
+        .eq('id', id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['service-orders'] });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Erro ao atualizar checklist',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
   return {
     orders,
     isLoading,
     error,
     stats,
     updateStatus,
+    updateChecklist, // Nova mutação
     createOrder,
     deleteOrder,
   };

@@ -41,6 +41,8 @@ import {
     Loader2,
     History,
     ArrowRightCircle,
+    Check,
+    Palette,
 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -48,12 +50,20 @@ import { ptBR } from 'date-fns/locale';
 export default function OrderDetailsPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const { orders, isLoading, updateStatus, deleteOrder } = useServiceOrders();
+    const { orders, isLoading, updateStatus, deleteOrder, updateChecklist } = useServiceOrders();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
     const order = orders.find(o => o.id === id);
+
+    const PRODUCTION_STAGES = [
+        'Arte Iniciada',
+        'Arte Aprovada pelo Designer',
+        'Arquivos de Impressão Prontos',
+        'Conferência de Medidas',
+        'Enviado para Produção'
+    ];
 
     const handleStatusChange = async (newStatus: OsStatus) => {
         if (!order) return;
@@ -63,6 +73,16 @@ export default function OrderDetailsPage() {
         } finally {
             setIsUpdatingStatus(false);
         }
+    };
+
+    const toggleStep = async (step: string) => {
+        if (!order) return;
+        const currentChecklist = order.production_checklist || [];
+        const newChecklist = currentChecklist.includes(step)
+            ? currentChecklist.filter(s => s !== step)
+            : [...currentChecklist, step];
+
+        await updateChecklist.mutateAsync({ id: order.id, checklist: newChecklist });
     };
 
     const handleDelete = async () => {
@@ -337,6 +357,44 @@ export default function OrderDetailsPage() {
                                 </ScrollArea>
                             </CardContent>
                         </Card>
+
+                        {/* Production Checklist */}
+                        <Card>
+                            <CardHeader className="pb-3 border-b border-border bg-muted/20">
+                                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                                    <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                                    Checklist de Produção
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-0">
+                                <div className="divide-y divide-border">
+                                    {PRODUCTION_STAGES.map((step) => {
+                                        const isChecked = order.production_checklist?.includes(step);
+                                        return (
+                                            <div
+                                                key={step}
+                                                onClick={() => toggleStep(step)}
+                                                className={`
+                                                    flex items-center justify-between p-4 cursor-pointer transition-colors
+                                                    hover:bg-muted/50 active:bg-muted
+                                                    ${isChecked ? 'bg-green-500/5' : ''}
+                                                `}
+                                            >
+                                                <span className={`text-sm sm:text-base font-medium ${isChecked ? 'text-green-700 line-through opacity-60' : 'text-foreground'}`}>
+                                                    {step}
+                                                </span>
+                                                <div className={`
+                                                    w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all
+                                                    ${isChecked ? 'bg-green-500 border-green-500 shadow-glow' : 'border-muted-foreground/30'}
+                                                `}>
+                                                    {isChecked && <Check className="h-4 w-4 text-white" />}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </CardContent>
+                        </Card>
                     </motion.div>
 
                     {/* Right Column - Info Cards */}
@@ -346,6 +404,29 @@ export default function OrderDetailsPage() {
                         transition={{ delay: 0.3 }}
                         className="space-y-4"
                     >
+                        {/* Designer Info */}
+                        <Card className="border-accent/20 bg-accent/5">
+                            <CardHeader className="pb-2">
+                                <CardTitle className="text-sm sm:text-base flex items-center gap-2">
+                                    <Palette className="h-4 w-4 text-accent" />
+                                    Designer Responsável
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">
+                                        {order.designer_name ? order.designer_name.charAt(0).toUpperCase() : '?'}
+                                    </div>
+                                    <div>
+                                        <p className="font-semibold text-sm sm:text-base text-foreground">
+                                            {order.designer_name || 'Não atribuído'}
+                                        </p>
+                                        <p className="text-[10px] sm:text-xs text-muted-foreground">Responsável pela arte e conferência</p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+
                         {/* Client Info */}
                         <Card>
                             <CardHeader className="pb-2">

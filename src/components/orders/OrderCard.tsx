@@ -61,6 +61,11 @@ export function OrderCard({ order, index = 0 }: OrderCardProps) {
                     {order.clients.name}
                   </span>
                 )}
+                {order.designer_name && (
+                  <span className="text-[10px] text-accent font-medium px-1.5 py-0 bg-accent/10 rounded flex items-center">
+                    🎨 {order.designer_name}
+                  </span>
+                )}
               </div>
             </div>
             <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0" />

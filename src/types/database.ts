@@ -1,8 +1,8 @@
 // Database types for Centurial SGPG
 
-export type OsStatus = 
+export type OsStatus =
   | 'orcamento'
-  | 'aprovado' 
+  | 'aprovado'
   | 'arte'
   | 'producao'
   | 'acabamento'
@@ -13,7 +13,7 @@ export type OsStatus =
 
 export type PriorityLevel = 'baixa' | 'normal' | 'alta' | 'urgente';
 
-export type ProductType = 
+export type ProductType =
   | 'placa_sinalizacao'
   | 'adesivo'
   | 'fachada'
@@ -54,6 +54,8 @@ export interface ServiceOrder {
   notes: string | null;
   created_by: string | null;
   assigned_to: string | null;
+  designer_name: string | null; // Novo campo
+  production_checklist: string[] | null; // Novo campo para checks
   created_at: string;
   updated_at: string;
   // Joined data

@@ -31,6 +31,7 @@ export default function NewOrderPage() {
     title: '',
     description: '',
     client_id: '',
+    designer_name: '', // Novo campo
     product_type: 'outros' as ProductType,
     priority: 'normal' as PriorityLevel,
     quantity: 1,
@@ -65,6 +66,8 @@ export default function NewOrderPage() {
         notes: formData.notes || null,
         created_by: null,
         assigned_to: null,
+        designer_name: formData.designer_name || null,
+        production_checklist: [], // Inicializa vazio
       });
       navigate('/orders');
     } catch (error) {
@@ -113,6 +116,17 @@ export default function NewOrderPage() {
                       value={formData.title}
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                       placeholder="Ex: Placas de Sinalização para Obra"
+                      className="mt-1.5"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="designer" className="text-sm">Designer Responsável</Label>
+                    <Input
+                      id="designer"
+                      value={formData.designer_name}
+                      onChange={(e) => setFormData({ ...formData, designer_name: e.target.value })}
+                      placeholder="Nome do designer responsável pela arte"
                       className="mt-1.5"
                     />
                   </div>
