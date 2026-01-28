@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Client } from '@/types/database';
 import { useToast } from '@/hooks/use-toast';
+import { playSound } from '@/lib/sounds';
 
 export function useClients() {
   const { toast } = useToast();
@@ -27,18 +28,20 @@ export function useClients() {
         .insert([client])
         .select()
         .single();
-      
+
       if (error) throw error;
       return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clients'] });
+      playSound('success');
       toast({
         title: 'Cliente cadastrado',
         description: 'Novo cliente cadastrado com sucesso.',
       });
     },
     onError: (error) => {
+      playSound('error');
       toast({
         title: 'Erro ao cadastrar',
         description: error.message,

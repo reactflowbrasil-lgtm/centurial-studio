@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { ServiceOrder, OsStatus } from '@/types/database';
 import { useToast } from '@/hooks/use-toast';
+import { playSound } from '@/lib/sounds';
 
 export function useServiceOrders() {
   const { toast } = useToast();
@@ -39,12 +40,14 @@ export function useServiceOrders() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['service-orders'] });
+      playSound('update');
       toast({
         title: 'Status atualizado',
         description: 'O status da OS foi atualizado com sucesso.',
       });
     },
     onError: (error) => {
+      playSound('error');
       toast({
         title: 'Erro ao atualizar',
         description: error.message,
@@ -66,12 +69,14 @@ export function useServiceOrders() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['service-orders'] });
+      playSound('success');
       toast({
         title: 'OS criada',
         description: 'Nova ordem de serviço criada com sucesso.',
       });
     },
     onError: (error) => {
+      playSound('error');
       toast({
         title: 'Erro ao criar OS',
         description: error.message,
@@ -130,8 +135,10 @@ export function useServiceOrders() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['service-orders'] });
+      playSound('update');
     },
     onError: (error) => {
+      playSound('error');
       toast({
         title: 'Erro ao atualizar checklist',
         description: error.message,
