@@ -2,12 +2,17 @@ import { motion } from 'framer-motion';
 import { AppLayout } from '@/components/AppLayout';
 import { StatsCard } from '@/components/dashboard/StatsCard';
 import { StatusPipeline } from '@/components/dashboard/StatusPipeline';
+import { StatusChart } from '@/components/dashboard/StatusChart';
+import { ProductTypeChart } from '@/components/dashboard/ProductTypeChart';
+import { ActivityFeed } from '@/components/dashboard/ActivityFeed';
+import { UrgentOrdersList } from '@/components/dashboard/UrgentOrdersList';
 import { OrderCard } from '@/components/orders/OrderCard';
 import { useServiceOrders } from '@/hooks/useServiceOrders';
-import { FileText, Users, TrendingUp, AlertTriangle, DollarSign, Clock, Loader2 } from 'lucide-react';
+import { FileText, Users, Clock, AlertTriangle, DollarSign, TrendingUp, Loader2, ArrowUpRight, LayoutGrid } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function Dashboard() {
   const { orders, isLoading, stats } = useServiceOrders();
@@ -20,18 +25,32 @@ export default function Dashboard() {
     }).format(value);
   };
 
+  // Calculate some additional metrics
+  const thisMonthOrders = orders.filter(o => {
+    const orderDate = new Date(o.created_at);
+    const now = new Date();
+    return orderDate.getMonth() === now.getMonth() && orderDate.getFullYear() === now.getFullYear();
+  });
+
+  const completedThisMonth = thisMonthOrders.filter(o => o.status === 'concluido').length;
+  const avgOrderValue = orders.length > 0
+    ? orders.reduce((sum, o) => sum + Number(o.total_price), 0) / orders.length
+    : 0;
+
   if (isLoading) {
     return (
       <AppLayout>
         <div className="flex items-center justify-center h-screen">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="h-10 w-10 animate-spin text-primary" />
+            <p className="text-muted-foreground animate-pulse">Carregando dashboard...</p>
+          </div>
         </div>
       </AppLayout>
     );
   }
 
   const recentOrders = orders.slice(0, 5);
-  const urgentOrders = orders.filter(o => o.priority === 'urgente' && o.status !== 'concluido');
 
   return (
     <AppLayout>
@@ -43,25 +62,40 @@ export default function Dashboard() {
           className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
         >
           <div>
-            <h1 className="text-3xl font-display font-bold text-foreground">Dashboard</h1>
-            <p className="text-muted-foreground mt-1">Visão geral da produção gráfica</p>
+            <h1 className="text-3xl font-display font-bold text-foreground">
+              Dashboard
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Bem-vindo ao Sistema de Gestão de Produção Gráfica
+            </p>
           </div>
-          <Button 
-            onClick={() => navigate('/orders/new')}
-            className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-glow"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Nova OS
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              onClick={() => navigate('/kanban')}
+              className="hidden sm:flex"
+            >
+              <LayoutGrid className="h-4 w-4 mr-2" />
+              Kanban
+            </Button>
+            <Button
+              onClick={() => navigate('/orders/new')}
+              className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-glow"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Nova OS
+            </Button>
+          </div>
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatsCard
             title="Total de OS"
             value={stats.total}
             icon={FileText}
             description="Ordens de serviço ativas"
+            trend={thisMonthOrders.length > 0 ? { value: thisMonthOrders.length, positive: true } : undefined}
           />
           <StatsCard
             title="Em Produção"
@@ -74,7 +108,7 @@ export default function Dashboard() {
             title="Valor Total"
             value={formatCurrency(stats.totalValue)}
             icon={DollarSign}
-            description="Faturamento em aberto"
+            description={`Ticket médio: ${formatCurrency(avgOrderValue)}`}
           />
           <StatsCard
             title="Urgentes"
@@ -85,89 +119,96 @@ export default function Dashboard() {
           />
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Pipeline */}
-          <div className="lg:col-span-2">
-            <StatusPipeline byStatus={stats.byStatus} />
-          </div>
-
-          {/* Quick Actions */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="bg-card rounded-2xl p-6 shadow-soft border border-border"
-          >
-            <h3 className="font-display font-semibold text-lg mb-4">Ações Rápidas</h3>
-            <div className="space-y-3">
-              <Button 
-                variant="outline" 
-                className="w-full justify-start"
-                onClick={() => navigate('/orders/new')}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Criar Nova OS
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start"
-                onClick={() => navigate('/clients')}
-              >
-                <Users className="h-4 w-4 mr-2" />
-                Gerenciar Clientes
-              </Button>
-              <Button 
-                variant="outline" 
-                className="w-full justify-start"
-                onClick={() => navigate('/assistant')}
-              >
-                <TrendingUp className="h-4 w-4 mr-2" />
-                Assistente IA
-              </Button>
-            </div>
-
-            {urgentOrders.length > 0 && (
-              <div className="mt-6 p-4 bg-destructive/10 rounded-xl border border-destructive/20">
-                <div className="flex items-center gap-2 mb-2">
-                  <AlertTriangle className="h-4 w-4 text-destructive" />
-                  <span className="font-medium text-destructive">Atenção</span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {urgentOrders.length} OS {urgentOrders.length === 1 ? 'urgente aguardando' : 'urgentes aguardando'}
-                </p>
-              </div>
-            )}
-          </motion.div>
-        </div>
-
-        {/* Recent Orders */}
+        {/* Pipeline */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.1 }}
         >
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-display font-semibold text-lg">Ordens Recentes</h3>
-            <Button variant="ghost" size="sm" onClick={() => navigate('/orders')}>
-              Ver todas
-            </Button>
-          </div>
-          <div className="space-y-3">
-            {recentOrders.map((order, index) => (
-              <OrderCard key={order.id} order={order} index={index} />
-            ))}
-            {recentOrders.length === 0 && (
-              <div className="text-center py-12 text-muted-foreground">
-                <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>Nenhuma ordem de serviço ainda</p>
-                <Button 
-                  className="mt-4"
-                  onClick={() => navigate('/orders/new')}
-                >
-                  Criar primeira OS
-                </Button>
-              </div>
-            )}
+          <StatusPipeline byStatus={stats.byStatus} />
+        </motion.div>
+
+        {/* Charts and Activity Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Status Chart */}
+          <StatusChart byStatus={stats.byStatus} />
+
+          {/* Product Type Chart */}
+          <ProductTypeChart orders={orders} />
+
+          {/* Urgent Orders */}
+          <UrgentOrdersList orders={orders} />
+        </div>
+
+        {/* Bottom Row - Activity Feed and Recent Orders */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Activity Feed */}
+          <ActivityFeed orders={orders} />
+
+          {/* Recent Orders */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-card rounded-2xl p-6 shadow-soft border border-border"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-display font-semibold text-lg">Ordens Recentes</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/orders')}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Ver todas
+                <ArrowUpRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+            <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+              {recentOrders.length > 0 ? (
+                recentOrders.map((order, index) => (
+                  <OrderCard key={order.id} order={order} index={index} />
+                ))
+              ) : (
+                <div className="text-center py-12 text-muted-foreground">
+                  <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>Nenhuma ordem de serviço ainda</p>
+                  <Button
+                    className="mt-4"
+                    onClick={() => navigate('/orders/new')}
+                  >
+                    Criar primeira OS
+                  </Button>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Quick Stats Footer */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 rounded-2xl p-6 border border-border/50"
+        >
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div>
+              <p className="text-2xl font-display font-bold text-foreground">{stats.total}</p>
+              <p className="text-xs text-muted-foreground mt-1">Total de Ordens</p>
+            </div>
+            <div>
+              <p className="text-2xl font-display font-bold text-green-600">{stats.completed}</p>
+              <p className="text-xs text-muted-foreground mt-1">Concluídas</p>
+            </div>
+            <div>
+              <p className="text-2xl font-display font-bold text-primary">{stats.inProgress}</p>
+              <p className="text-xs text-muted-foreground mt-1">Em Produção</p>
+            </div>
+            <div>
+              <p className="text-2xl font-display font-bold text-gradient">{formatCurrency(stats.totalValue)}</p>
+              <p className="text-xs text-muted-foreground mt-1">Faturamento Total</p>
+            </div>
           </div>
         </motion.div>
       </div>

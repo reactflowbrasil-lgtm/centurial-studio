@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import {
   LayoutDashboard,
   FileText,
@@ -14,11 +15,13 @@ import {
   ChevronRight,
   Zap,
   Sparkles,
+  LayoutGrid,
 } from 'lucide-react';
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
   { name: 'Ordens de Serviço', href: '/orders', icon: FileText },
+  { name: 'Kanban', href: '/kanban', icon: LayoutGrid },
   { name: 'Clientes', href: '/clients', icon: Users },
   { name: 'Assistente IA', href: '/assistant', icon: Sparkles },
   { name: 'Configurações', href: '/settings', icon: Settings },
@@ -104,18 +107,26 @@ export function AppLayout({ children }: AppSidebarProps) {
 
         {/* User & Collapse */}
         <div className="p-3 border-t border-sidebar-border space-y-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={signOut}
-            className={cn(
-              'w-full justify-start text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent',
-              collapsed && 'justify-center px-0'
-            )}
-          >
-            <LogOut className="h-4 w-4 flex-shrink-0" />
-            {!collapsed && <span className="ml-2 truncate">{user?.email?.split('@')[0]}</span>}
-          </Button>
+          <div className={cn('flex items-center gap-2', collapsed ? 'justify-center' : 'justify-between')}>
+            {!collapsed && <ThemeToggle />}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={signOut}
+              className={cn(
+                'flex-1 justify-start text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent',
+                collapsed && 'justify-center px-0 flex-initial'
+              )}
+            >
+              <LogOut className="h-4 w-4 flex-shrink-0" />
+              {!collapsed && <span className="ml-2 truncate">{user?.email?.split('@')[0]}</span>}
+            </Button>
+          </div>
+          {collapsed && (
+            <div className="flex justify-center">
+              <ThemeToggle />
+            </div>
+          )}
           <Button
             variant="ghost"
             size="icon"

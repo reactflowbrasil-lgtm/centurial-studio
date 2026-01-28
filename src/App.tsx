@@ -9,6 +9,8 @@ import Dashboard from "./pages/Dashboard";
 import AuthPage from "./pages/Auth";
 import OrdersPage from "./pages/Orders";
 import NewOrderPage from "./pages/NewOrder";
+import OrderDetailsPage from "./pages/OrderDetails";
+import KanbanViewPage from "./pages/KanbanView";
 import ClientsPage from "./pages/Clients";
 import SettingsPage from "./pages/Settings";
 import AssistantPage from "./pages/Assistant";
@@ -28,6 +30,8 @@ const App = () => (
             <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/orders" element={<ProtectedRoute><OrdersPage /></ProtectedRoute>} />
             <Route path="/orders/new" element={<ProtectedRoute><NewOrderPage /></ProtectedRoute>} />
+            <Route path="/orders/:id" element={<ProtectedRoute><OrderDetailsPage /></ProtectedRoute>} />
+            <Route path="/kanban" element={<ProtectedRoute><KanbanViewPage /></ProtectedRoute>} />
             <Route path="/clients" element={<ProtectedRoute><ClientsPage /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
             <Route path="/assistant" element={<ProtectedRoute><AssistantPage /></ProtectedRoute>} />
