@@ -18,10 +18,12 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'script',
       devOptions: {
-        enabled: true
+        enabled: true,
+        type: 'classic'
       },
-      includeAssets: ['favicon.ico', 'placeholder.svg'],
+      includeAssets: ['favicon.ico', 'placeholder.svg', 'icons/icon-192x192.png', 'icons/icon-512x512.png'],
       manifest: {
         name: 'Centurial SGPG',
         short_name: 'Centurial',
@@ -29,20 +31,20 @@ export default defineConfig(({ mode }) => ({
         theme_color: '#1a2238',
         background_color: '#f8fafc',
         display: 'standalone',
-        start_url: '/',
+        start_url: '.',
         icons: [
           {
-            src: '/icons/icon-192x192.png',
+            src: 'icons/icon-192x192.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: '/icons/icon-512x512.png',
+            src: 'icons/icon-512x512.png',
             sizes: '512x512',
             type: 'image/png'
           },
           {
-            src: '/icons/icon-512x512.png',
+            src: 'icons/icon-512x512.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
