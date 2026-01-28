@@ -1,0 +1,32 @@
+{
+    "name": "Centurial SGPG",
+    "short_name": "Centurial",
+    "description": "Sistema de Gestão de Produção Gráfica",
+    "theme_color": "#1a2238",
+    "background_color": "#f8fafc",
+    "display": "standalone",
+    "orientation": "portrait",
+    "start_url": ".",
+    "scope": "/",
+    "id": "centurial-sgpg",
+    "icons": [
+        {
+            "src": "icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

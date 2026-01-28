@@ -8,13 +8,22 @@
   <title>Centurial SGPG - Sistema de Gestão de Produção Gráfica</title>
   <meta name="description" content="Sistema inteligente de gestão para a Centurial - Shopping da Sinalização." />
   <meta name="theme-color" content="#1a2238" />
-  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
 </head>
 
 <body style="overflow-x: hidden; padding: 0; margin: 0; width: 100%; position: relative;">
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then(reg => console.log('🚀 PWA: Service Worker ativo!', reg))
+          .catch(err => console.log('❌ PWA: Erro no SW', err));
+      });
+    }
+  </script>
 </body>
 
 </html>

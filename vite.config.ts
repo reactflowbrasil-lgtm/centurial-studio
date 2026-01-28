@@ -19,6 +19,13 @@ export default defineConfig(({ mode }) => ({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
+      strategies: 'generateSW',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: true
+      },
       devOptions: {
         enabled: true,
         type: 'classic'
@@ -31,8 +38,10 @@ export default defineConfig(({ mode }) => ({
         theme_color: '#1a2238',
         background_color: '#f8fafc',
         display: 'standalone',
-        start_url: './',
-        scope: './',
+        orientation: 'portrait',
+        start_url: '.',
+        scope: '/',
+        id: 'centurial-sgpg',
         icons: [
           {
             src: 'icons/icon-192x192.png',

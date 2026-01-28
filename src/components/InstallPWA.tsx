@@ -56,49 +56,49 @@ export function InstallPWA() {
         <AnimatePresence>
             {isVisible && (
                 <motion.div
-                    initial={{ opacity: 0, y: 50 }}
+                    initial={{ opacity: 0, y: 100 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 50 }}
-                    className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 z-[100] sm:w-80"
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    className="fixed bottom-8 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-10 z-[100] sm:w-85"
                 >
-                    <div className="bg-card border border-border shadow-elevated rounded-2xl p-4 sm:p-5 relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 p-2">
+                    <div className="bg-card/95 backdrop-blur-md border-2 border-primary/30 shadow-2xl rounded-3xl p-5 sm:p-6 relative overflow-hidden ring-1 ring-black/5">
+                        <div className="absolute top-1 right-1">
                             <button
                                 onClick={dismiss}
-                                className="text-muted-foreground hover:text-foreground transition-colors"
+                                className="text-muted-foreground hover:text-foreground transition-colors p-1"
                             >
                                 <X className="h-4 w-4" />
                             </button>
                         </div>
 
                         <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-glow shrink-0">
+                            <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-lg shrink-0">
                                 <Download className="h-6 w-6 text-primary-foreground" />
                             </div>
                             <div className="flex-1 min-w-0 pr-4">
                                 <h3 className="font-display font-bold text-sm sm:text-base text-foreground">
-                                    {showManualInfo ? 'Instalar App' : 'Instalar Centurial'}
+                                    {showManualInfo ? 'Instale o Sistema' : 'SGP Centurial'}
                                 </h3>
-                                <p className="text-xs text-muted-foreground mt-0.5">
+                                <p className="text-xs text-muted-foreground mt-0.5 leading-tight">
                                     {showManualInfo
-                                        ? 'No iPhone: toque em Compartilhar e "Adicionar à Tela de Início".'
-                                        : 'Acesse o sistema direto da sua tela inicial.'}
+                                        ? 'Toque no ícone de compartilhar (quadrado com seta) e escolha "Adicionar à Tela de Início".'
+                                        : 'Adicione o Centurial à sua tela inicial para acesso rápido.'}
                                 </p>
                             </div>
                         </div>
 
-                        <div className="mt-4 flex gap-2">
+                        <div className="mt-5 flex gap-2">
                             {!showManualInfo ? (
                                 <Button
                                     onClick={handleInstallClick}
-                                    className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground text-xs h-9"
+                                    className="flex-1 bg-accent hover:bg-accent/90 text-accent-foreground text-xs h-10 font-bold"
                                 >
                                     Instalar Agora
                                 </Button>
                             ) : (
                                 <Button
                                     onClick={dismiss}
-                                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground text-xs h-9"
+                                    className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground text-xs h-10 font-bold"
                                 >
                                     Entendi
                                 </Button>
@@ -106,9 +106,9 @@ export function InstallPWA() {
                             <Button
                                 variant="outline"
                                 onClick={dismiss}
-                                className="text-xs h-9 px-2"
+                                className="text-xs h-10 px-3 border-border/50"
                             >
-                                Depois
+                                Agora não
                             </Button>
                         </div>
                     </div>
