@@ -4,8 +4,8 @@
  */
 
 const SOUND_URLS = {
-    success: 'https://assets.mixkit.co/active_storage/sfx/2354/2354-preview.mp3', // Level up / Success
-    update: 'https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3',  // Notification / Pop
+    success: 'https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3', // Doorbell / Success
+    update: 'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3',  // Bell / Update
     error: 'https://assets.mixkit.co/active_storage/sfx/2353/2353-preview.mp3',   // Alert / Error
 };
 
