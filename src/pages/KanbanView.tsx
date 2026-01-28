@@ -101,15 +101,21 @@ export default function KanbanView() {
                         </div>
                     </div>
 
-                    {/* Mobile instruction */}
-                    <p className="text-xs text-muted-foreground mt-2 sm:hidden">
-                        Deslize horizontalmente • Toque para ver detalhes
-                    </p>
+                    {/* Mobile Column Indicators */}
+                    <div className="flex gap-1.5 mt-4 sm:hidden justify-center overflow-x-auto py-1">
+                        {STATUS_WORKFLOW.filter(s => s !== 'cancelado').map((status, idx) => (
+                            <div
+                                key={status}
+                                className={`h-1.5 rounded-full transition-all duration-300 ${idx === 0 ? 'w-6 bg-primary' : 'w-2 bg-muted-foreground/20'
+                                    }`}
+                            />
+                        ))}
+                    </div>
                 </motion.div>
 
-                {/* Kanban Board - Horizontal scroll on all sizes */}
-                <div className="flex-1 overflow-x-auto overflow-y-hidden -mx-4 sm:mx-0 px-4 sm:px-0">
-                    <div className="flex gap-3 sm:gap-4 h-full min-w-max pb-4">
+                {/* Kanban Board - Horizontal scroll with snap on mobile */}
+                <div className="flex-1 overflow-x-auto overflow-y-hidden -mx-4 sm:mx-0 px-4 sm:px-0 snap-x snap-mandatory scroll-smooth">
+                    <div className="flex gap-4 h-full min-w-max pb-4">
                         {kanbanStatuses.map((status, columnIndex) => {
                             const config = STATUS_CONFIG[status];
                             const columnOrders = orders.filter(o => o.status === status);
@@ -120,7 +126,7 @@ export default function KanbanView() {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: columnIndex * 0.1 }}
-                                    className="w-[280px] sm:w-[300px] lg:w-[320px] flex-shrink-0 flex flex-col bg-muted/30 rounded-xl border border-border"
+                                    className="w-[calc(100vw-2rem)] sm:w-[300px] lg:w-[320px] flex-shrink-0 flex flex-col bg-muted/30 rounded-xl border border-border snap-center"
                                     onDragOver={(e) => e.preventDefault()}
                                     onDrop={() => handleDrop(status)}
                                 >
@@ -217,7 +223,7 @@ export default function KanbanView() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: kanbanStatuses.length * 0.1 }}
-                            className="w-[280px] sm:w-[300px] lg:w-[320px] flex-shrink-0 flex flex-col bg-green-500/5 rounded-xl border border-green-500/20"
+                            className="w-[calc(100vw-2rem)] sm:w-[300px] lg:w-[320px] flex-shrink-0 flex flex-col bg-green-500/5 rounded-xl border border-green-500/20 snap-center"
                             onDragOver={(e) => e.preventDefault()}
                             onDrop={() => handleDrop('concluido')}
                         >
