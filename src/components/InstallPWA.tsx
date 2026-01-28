@@ -100,7 +100,7 @@ export function InstallPWA() {
                                     onClick={dismiss}
                                     className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground text-xs h-10 font-bold"
                                 >
-                                    Entendi
+                                    Instalar!
                                 </Button>
                             )}
                             <Button
