@@ -202,18 +202,18 @@ export default function OrderDetailsPage() {
 
                     {/* Title and meta */}
                     <div>
-                        <div className="flex items-start gap-3 mb-2">
-                            <span className="text-2xl sm:text-3xl">{productConfig.icon}</span>
+                        <div className="flex items-start gap-2 sm:gap-3 mb-2">
+                            <span className="text-xl sm:text-3xl shrink-0">{productConfig.icon}</span>
                             <div className="flex-1 min-w-0">
-                                <h1 className="text-xl sm:text-2xl lg:text-3xl font-display font-bold text-foreground line-clamp-2">
+                                <h1 className="text-lg sm:text-2xl lg:text-3xl font-display font-bold text-foreground line-clamp-2 leading-tight">
                                     {order.title}
                                 </h1>
-                                <div className="flex flex-wrap items-center gap-2 mt-2 text-sm text-muted-foreground">
-                                    <Badge variant="secondary" className="text-xs">
+                                <div className="flex flex-wrap items-center gap-2 mt-1 sm:mt-2 text-[10px] sm:text-sm text-muted-foreground">
+                                    <Badge variant="secondary" className="text-[9px] sm:text-xs h-5">
                                         OS #{order.os_number}
                                     </Badge>
-                                    <span className="hidden sm:inline">•</span>
-                                    <span className="text-xs sm:text-sm">
+                                    <span className="hidden xs:inline">•</span>
+                                    <span>
                                         {formatDistanceToNow(new Date(order.created_at), { locale: ptBR, addSuffix: true })}
                                     </span>
                                 </div>
