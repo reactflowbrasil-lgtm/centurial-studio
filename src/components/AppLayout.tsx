@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { InstallPWA } from '@/components/InstallPWA';
 import {
   LayoutDashboard,
   FileText,
@@ -166,7 +167,7 @@ export function AppLayout({ children }: AppSidebarProps) {
   );
 
   return (
-    <div className="min-h-screen flex w-full bg-background">
+    <div className="min-h-screen flex w-full bg-background overflow-x-hidden">
       {/* Mobile Header */}
       <div className="fixed top-0 left-0 right-0 z-50 lg:hidden">
         <div className="h-16 bg-sidebar border-b border-sidebar-border flex items-center justify-between px-4">
@@ -217,14 +218,17 @@ export function AppLayout({ children }: AppSidebarProps) {
       {/* Main Content */}
       <main
         className={cn(
-          'flex-1 transition-all duration-300 pt-16 lg:pt-0',
+          'flex-1 transition-all duration-300 pt-16 lg:pt-0 overflow-x-hidden',
           collapsed ? 'lg:ml-20' : 'lg:ml-[260px]'
         )}
       >
-        <div className="min-h-screen">
+        <div className="min-h-screen w-full overflow-x-hidden">
           {children}
         </div>
       </main>
+
+      {/* PWA Install Prompt */}
+      <InstallPWA />
     </div>
   );
 }
