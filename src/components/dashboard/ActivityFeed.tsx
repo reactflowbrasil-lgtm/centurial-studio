@@ -29,7 +29,7 @@ interface Activity {
 }
 
 export function ActivityFeed({ orders }: ActivityFeedProps) {
-    // Simulate activities based on orders - in real app, this would come from a proper activity log
+    // Simulate activities based on orders
     const activities: Activity[] = orders
         .slice(0, 10)
         .map((order) => {
@@ -88,19 +88,19 @@ export function ActivityFeed({ orders }: ActivityFeedProps) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-card rounded-2xl p-6 shadow-soft border border-border h-full"
+            className="bg-card rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-soft border border-border h-full"
         >
-            <div className="flex items-center justify-between mb-4">
-                <h3 className="font-display font-semibold text-lg">Atividades Recentes</h3>
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <h3 className="font-display font-semibold text-base sm:text-lg">Atividades Recentes</h3>
                 <Clock className="h-4 w-4 text-muted-foreground" />
             </div>
 
-            <ScrollArea className="h-[280px] -mx-2 px-2">
-                <div className="space-y-4">
+            <ScrollArea className="h-[240px] sm:h-[280px] -mx-2 px-2">
+                <div className="space-y-3 sm:space-y-4">
                     {activities.length === 0 ? (
                         <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
                             <Clock className="h-8 w-8 mb-2 opacity-50" />
-                            <p className="text-sm">Nenhuma atividade recente</p>
+                            <p className="text-xs sm:text-sm">Nenhuma atividade recente</p>
                         </div>
                     ) : (
                         activities.map((activity, index) => {
@@ -112,32 +112,32 @@ export function ActivityFeed({ orders }: ActivityFeedProps) {
                                     initial={{ opacity: 0, x: -10 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: index * 0.05 }}
-                                    className="flex items-start gap-3 group"
+                                    className="flex items-start gap-2.5 sm:gap-3 group"
                                 >
                                     {/* Timeline dot */}
                                     <div className="relative flex flex-col items-center">
-                                        <div className={`w-8 h-8 rounded-full flex items-center justify-center ${color}`}>
-                                            <Icon className="h-4 w-4" />
+                                        <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center ${color}`}>
+                                            <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                                         </div>
                                         {index < activities.length - 1 && (
-                                            <div className="w-px h-full bg-border absolute top-8 left-1/2 -translate-x-1/2" />
+                                            <div className="w-px h-full bg-border absolute top-7 sm:top-8 left-1/2 -translate-x-1/2" />
                                         )}
                                     </div>
 
                                     {/* Content */}
-                                    <div className="flex-1 min-w-0 pb-4">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <p className="text-sm font-medium text-foreground truncate">
+                                    <div className="flex-1 min-w-0 pb-3 sm:pb-4">
+                                        <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
+                                            <p className="text-xs sm:text-sm font-medium text-foreground truncate">
                                                 {activity.title}
                                             </p>
-                                            <Badge variant="outline" className="text-[10px] px-1.5 py-0 flex-shrink-0">
+                                            <Badge variant="outline" className="text-[8px] sm:text-[10px] px-1 sm:px-1.5 py-0 flex-shrink-0">
                                                 #{activity.osNumber}
                                             </Badge>
                                         </div>
-                                        <p className="text-xs text-muted-foreground mb-1">
+                                        <p className="text-[10px] sm:text-xs text-muted-foreground mb-0.5 sm:mb-1">
                                             {activity.subtitle}
                                         </p>
-                                        <p className="text-xs text-muted-foreground/70">
+                                        <p className="text-[10px] sm:text-xs text-muted-foreground/70">
                                             {formatDistanceToNow(activity.time, { locale: ptBR, addSuffix: true })}
                                         </p>
                                     </div>

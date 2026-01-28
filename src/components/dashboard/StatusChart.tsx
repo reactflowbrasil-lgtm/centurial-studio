@@ -31,23 +31,30 @@ export function StatusChart({ byStatus }: StatusChartProps) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-card rounded-2xl p-6 shadow-soft border border-border h-full"
+            className="bg-card rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-soft border border-border h-full"
         >
-            <h3 className="font-display font-semibold text-lg mb-4">Ordens por Status</h3>
+            <h3 className="font-display font-semibold text-base sm:text-lg mb-3 sm:mb-4">Ordens por Status</h3>
 
-            <div className="h-[250px]">
+            <div className="h-[200px] sm:h-[250px]">
                 <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={data} layout="vertical" margin={{ top: 0, right: 20, bottom: 0, left: 0 }}>
+                    <BarChart data={data} layout="vertical" margin={{ top: 0, right: 10, bottom: 0, left: 0 }}>
                         <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="hsl(var(--border))" />
-                        <XAxis type="number" tickLine={false} axisLine={false} fontSize={12} stroke="hsl(var(--muted-foreground))" />
+                        <XAxis
+                            type="number"
+                            tickLine={false}
+                            axisLine={false}
+                            fontSize={10}
+                            stroke="hsl(var(--muted-foreground))"
+                        />
                         <YAxis
                             type="category"
                             dataKey="name"
                             tickLine={false}
                             axisLine={false}
-                            width={80}
-                            fontSize={11}
+                            width={65}
+                            fontSize={9}
                             stroke="hsl(var(--muted-foreground))"
+                            tick={{ fontSize: 9 }}
                         />
                         <Tooltip
                             cursor={{ fill: 'hsl(var(--muted) / 0.3)' }}
@@ -55,7 +62,8 @@ export function StatusChart({ byStatus }: StatusChartProps) {
                                 backgroundColor: 'hsl(var(--card))',
                                 border: '1px solid hsl(var(--border))',
                                 borderRadius: '8px',
-                                boxShadow: 'var(--shadow-md)'
+                                boxShadow: 'var(--shadow-md)',
+                                fontSize: '12px'
                             }}
                             formatter={(value: number) => [`${value} OS`, 'Quantidade']}
                         />

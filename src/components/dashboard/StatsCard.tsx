@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon, TrendingUp, TrendingDown } from 'lucide-react';
 
 interface StatsCardProps {
   title: string;
@@ -14,68 +14,58 @@ interface StatsCardProps {
   variant?: 'default' | 'primary' | 'accent';
 }
 
-export function StatsCard({ 
-  title, 
-  value, 
-  icon: Icon, 
-  description, 
-  trend,
-  variant = 'default' 
-}: StatsCardProps) {
+export function StatsCard({ title, value, icon: Icon, description, trend, variant = 'default' }: StatsCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.3 }}
       className={cn(
-        'relative overflow-hidden rounded-2xl p-6 shadow-soft transition-shadow hover:shadow-elevated',
-        variant === 'default' && 'bg-card border border-border',
-        variant === 'primary' && 'bg-gradient-to-br from-primary to-primary/80 text-primary-foreground',
-        variant === 'accent' && 'bg-gradient-to-br from-accent to-accent/80 text-accent-foreground'
+        'bg-card rounded-xl sm:rounded-2xl p-3 sm:p-5 shadow-soft border transition-all hover:shadow-md',
+        variant === 'primary' && 'bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20',
+        variant === 'accent' && 'bg-gradient-to-br from-accent/10 to-accent/5 border-accent/20',
+        variant === 'default' && 'border-border'
       )}
     >
-      {/* Background decoration */}
-      <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-white/5" />
-      
-      <div className="relative flex items-start justify-between">
-        <div className="space-y-2">
-          <p className={cn(
-            'text-sm font-medium',
-            variant === 'default' ? 'text-muted-foreground' : 'text-current/80'
-          )}>
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <p className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wide truncate">
             {title}
           </p>
-          <div className="flex items-baseline gap-2">
-            <h3 className="text-3xl font-display font-bold tracking-tight">{value}</h3>
-            {trend && (
-              <span className={cn(
-                'text-xs font-medium px-1.5 py-0.5 rounded-full',
-                trend.positive ? 'bg-green-500/20 text-green-600' : 'bg-red-500/20 text-red-600'
-              )}>
-                {trend.positive ? '+' : ''}{trend.value}%
-              </span>
-            )}
-          </div>
+          <p className={cn(
+            'font-display font-bold mt-1 truncate',
+            typeof value === 'string' && value.length > 10
+              ? 'text-lg sm:text-2xl'
+              : 'text-xl sm:text-3xl'
+          )}>
+            {value}
+          </p>
           {description && (
-            <p className={cn(
-              'text-xs',
-              variant === 'default' ? 'text-muted-foreground' : 'text-current/70'
-            )}>
-              {description}
-            </p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground mt-1 line-clamp-1">{description}</p>
           )}
         </div>
         <div className={cn(
-          'rounded-xl p-3',
-          variant === 'default' ? 'bg-primary/10' : 'bg-white/20'
+          'w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0',
+          variant === 'primary' && 'bg-primary/20 text-primary',
+          variant === 'accent' && 'bg-accent/20 text-accent',
+          variant === 'default' && 'bg-muted text-muted-foreground'
         )}>
-          <Icon className={cn(
-            'h-6 w-6',
-            variant === 'default' ? 'text-primary' : 'text-current'
-          )} />
+          <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
         </div>
       </div>
+
+      {trend && (
+        <div className={cn(
+          'flex items-center gap-1 mt-2 sm:mt-3 text-[10px] sm:text-xs font-medium',
+          trend.positive ? 'text-green-600' : 'text-red-500'
+        )}>
+          {trend.positive ? (
+            <TrendingUp className="h-3 w-3" />
+          ) : (
+            <TrendingDown className="h-3 w-3" />
+          )}
+          <span>+{trend.value} este mês</span>
+        </div>
+      )}
     </motion.div>
   );
 }

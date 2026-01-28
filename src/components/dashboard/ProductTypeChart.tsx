@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { PRODUCT_TYPE_CONFIG, ProductType } from '@/types/database';
 import { ServiceOrder } from '@/types/database';
 
@@ -37,11 +37,11 @@ export function ProductTypeChart({ orders }: ProductTypeChartProps) {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-card rounded-2xl p-6 shadow-soft border border-border h-full flex flex-col"
+                className="bg-card rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-soft border border-border h-full flex flex-col"
             >
-                <h3 className="font-display font-semibold text-lg mb-4">Por Tipo de Produto</h3>
+                <h3 className="font-display font-semibold text-base sm:text-lg mb-3 sm:mb-4">Por Tipo de Produto</h3>
                 <div className="flex-1 flex items-center justify-center text-muted-foreground">
-                    <p>Nenhum dado disponível</p>
+                    <p className="text-sm">Nenhum dado disponível</p>
                 </div>
             </motion.div>
         );
@@ -51,19 +51,19 @@ export function ProductTypeChart({ orders }: ProductTypeChartProps) {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-card rounded-2xl p-6 shadow-soft border border-border h-full"
+            className="bg-card rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-soft border border-border h-full"
         >
-            <h3 className="font-display font-semibold text-lg mb-4">Por Tipo de Produto</h3>
+            <h3 className="font-display font-semibold text-base sm:text-lg mb-3 sm:mb-4">Por Tipo de Produto</h3>
 
-            <div className="h-[250px]">
+            <div className="h-[180px] sm:h-[200px]">
                 <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                         <Pie
                             data={data}
                             cx="50%"
                             cy="50%"
-                            innerRadius={60}
-                            outerRadius={90}
+                            innerRadius={45}
+                            outerRadius={70}
                             paddingAngle={2}
                             dataKey="value"
                         >
@@ -76,7 +76,8 @@ export function ProductTypeChart({ orders }: ProductTypeChartProps) {
                                 backgroundColor: 'hsl(var(--card))',
                                 border: '1px solid hsl(var(--border))',
                                 borderRadius: '8px',
-                                boxShadow: 'var(--shadow-md)'
+                                boxShadow: 'var(--shadow-md)',
+                                fontSize: '12px'
                             }}
                             formatter={(value: number, name: string) => [`${value} OS`, name]}
                         />
@@ -84,18 +85,18 @@ export function ProductTypeChart({ orders }: ProductTypeChartProps) {
                 </ResponsiveContainer>
             </div>
 
-            {/* Legend */}
-            <div className="grid grid-cols-2 gap-2 mt-4">
+            {/* Legend - 2 cols, max 4 items */}
+            <div className="grid grid-cols-2 gap-1.5 sm:gap-2 mt-3 sm:mt-4">
                 {data.slice(0, 4).map((item, index) => (
-                    <div key={item.name} className="flex items-center gap-2 text-sm">
+                    <div key={item.name} className="flex items-center gap-1.5 text-xs sm:text-sm">
                         <div
-                            className="w-3 h-3 rounded-full flex-shrink-0"
+                            className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full flex-shrink-0"
                             style={{ backgroundColor: COLORS[index % COLORS.length] }}
                         />
-                        <span className="truncate text-muted-foreground">
+                        <span className="truncate text-muted-foreground text-[10px] sm:text-xs">
                             {item.icon} {item.name}
                         </span>
-                        <span className="font-medium text-foreground ml-auto">{item.value}</span>
+                        <span className="font-medium text-foreground ml-auto text-[10px] sm:text-xs">{item.value}</span>
                     </div>
                 ))}
             </div>
